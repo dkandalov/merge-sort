@@ -1,0 +1,42 @@
+buildscript {
+	ext.kotlin_version = "1.3.11"
+
+	repositories {
+		maven { url "http://jcenter.bintray.com" }
+		mavenCentral()
+	}
+	dependencies {
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+	}
+}
+
+repositories {
+	maven { url "http://jcenter.bintray.com" }
+	mavenCentral()
+	jcenter()
+	ivy {
+		layout "pattern"
+		artifactPattern "http://raw.githubusercontent.com/dkandalov/kotlin-common/master/jars/[organisation]-[artifact]-[revision](-[classifier])(.[ext])"
+		artifactPattern "http://raw.githubusercontent.com/dkandalov/kotlin-common-test/master/jars/[organisation]-[artifact]-[revision](-[classifier])(.[ext])"
+	}
+}
+group "katas"
+version "0.0"
+apply plugin:"kotlin"
+
+
+dependencies {
+	compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+	compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+	compile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    compile "dkandalov:kotlin-common:0.1.4"
+    compile "dkandalov:kotlin-common-test:0.1.2"
+    compile "junit:junit:4.12"
+}
+
+sourceSets {
+	main.kotlin.srcDir "src"
+}
+
+compileKotlin.kotlinOptions.jvmTarget = "1.8"
+compileTestKotlin.kotlinOptions.jvmTarget = "1.8"
