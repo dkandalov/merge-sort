@@ -39,8 +39,8 @@ class MergeSortTests {
 
         val seed = Random.nextInt().printed("seed=")
         val list = Random(seed = seed).listOfInts(
-            size = 100_000,
-            valuesRange = 0..100
+            sizeRange = 0..100_000,
+            valuesRange = 0..100_000
         )
         list.mergeSort().isSorted() shouldEqual true
     }
@@ -62,8 +62,8 @@ fun <E: Comparable<E>> List<E>.mergeSort(): List<E> {
 fun <E: Comparable<E>> List<E>.mergeSort_recursive(): List<E> {
     if (size <= 1) return this
     return merge(
-        subList(0, size / 2).mergeSort(),
-        subList(size / 2, size).mergeSort()
+        subList(0, size / 2).mergeSort_recursive(),
+        subList(size / 2, size).mergeSort_recursive()
     )
 }
 
