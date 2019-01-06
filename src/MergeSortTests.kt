@@ -10,6 +10,7 @@ class MergeSortTests {
     @Test fun `trivial examples`() {
         emptyList<Int>().mergeSort() shouldEqual emptyList()
         listOf(1).mergeSort() shouldEqual listOf(1)
+        listOf(1, 1).mergeSort() shouldEqual listOf(1, 1)
     }
 
     @Test fun `sort list of 2 elements`() {
