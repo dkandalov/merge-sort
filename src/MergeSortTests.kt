@@ -10,7 +10,6 @@ class MergeSortTests {
     @Test fun `trivial examples`() {
         emptyList<Int>().mergeSort() shouldEqual emptyList()
         listOf(1).mergeSort() shouldEqual listOf(1)
-        listOf(1, 1).mergeSort() shouldEqual listOf(1, 1)
     }
 
     @Test fun `sort list of 2 elements`() {
@@ -37,8 +36,8 @@ class MergeSortTests {
         fun List<Int>.isSorted() =
             windowed(size = 2).all { it[0] <= it[1] }
 
-        val seed = Random.nextInt().printed("seed=")
-        val list = Random(seed = seed).listOfInts(
+        val random = Random(seed = Random.nextInt().printed("seed="))
+        val list = random.listOfInts(
             sizeRange = 0..100_000,
             valuesRange = 0..100_000
         )
@@ -56,7 +55,7 @@ fun <E: Comparable<E>> List<E>.mergeSort(): List<E> {
         val list2 = queue.removeFirst()
         queue.add(merge(list1, list2))
     }
-    return queue.first
+    return queue.single()
 }
 
 fun <E: Comparable<E>> List<E>.mergeSort_recursive(): List<E> {
@@ -72,10 +71,20 @@ fun <E: Comparable<E>> merge(left: List<E>, right: List<E>): List<E> {
     var i = 0
     var j = 0
     while (i < left.size && j < right.size) {
-        val minElement = if (left[i] < right[j]) left[i++] else right[j++]
+        val minElement = if (left[i] <= right[j]) left[i++] else right[j++]
         result.add(minElement)
     }
     result.addAll(left.subList(i, left.size))
     result.addAll(right.subList(j, right.size))
     return result
 }
+
+fun <E: Comparable<E>> merge_recursive(left: List<E>, right: List<E>): List<E> {
+    return when {
+        left.isEmpty()      -> right
+        right.isEmpty()     -> left
+        left[0] <= right[0] -> listOf(left[0]) + merge_recursive(left.drop(1), right)
+        else                -> listOf(right[0]) + merge_recursive(left, right.drop(1))
+    }
+}
+
