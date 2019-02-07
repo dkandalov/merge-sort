@@ -32,16 +32,17 @@ class MergeSortTests {
         }
     }
 
-    @Test fun `sort random list`() {
+    @Test fun `can sort random list`() {
         fun List<Int>.isSorted() =
             windowed(size = 2).all { it[0] <= it[1] }
 
         val random = Random(seed = Random.nextInt().printed("seed="))
         val list = random.listOfInts(
             sizeRange = 0..100_000,
-            valuesRange = 0..100_000
+            valuesRange = 0..50
         )
         list.mergeSort().isSorted() shouldEqual true
+        list.mergeSort().size shouldEqual list.size
     }
 }
 
@@ -49,11 +50,11 @@ fun <E: Comparable<E>> List<E>.mergeSort(): List<E> {
     if (size <= 1) return this
 
     val queue = LinkedList<List<E>>()
-    queue.addAll(map { listOf(it) })
+    forEach { element -> queue.add(listOf(element)) }
     while (queue.size > 1) {
-        val list1 = queue.removeFirst()
-        val list2 = queue.removeFirst()
-        queue.add(merge(list1, list2))
+        val left = queue.removeFirst()
+        val right = queue.removeFirst()
+        queue.add(merge(left, right))
     }
     return queue.single()
 }
